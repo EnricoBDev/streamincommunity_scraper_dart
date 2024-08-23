@@ -13,11 +13,11 @@ Dart package to scrape Italian 🇮🇹 streaming website [streamingcommunity](s
 
 - Add to yout `pubspec.yaml`
 
-```yaml
-streamingcommunity_scraper:
-  git:
-    url: https://github.com/EnricoBDev/streamincommunity_scraper_dart.git
-```
+  ```yaml
+  streamingcommunity_scraper:
+    git:
+      url: https://github.com/EnricoBDev/streamincommunity_scraper_dart.git
+  ```
 
 ## Usage
 
