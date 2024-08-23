@@ -11,6 +11,14 @@ Dart package to scrape Italian 🇮🇹 streaming website [streamingcommunity](s
 
 - The package depends on [puppeteer-dart](https://pub.dev/packages/puppeteer) 🃏 to connect to a remote chrome debugging instance, a pre-made Dockerfile 🐋 with all the necessary flags can be found [here](https://github.com/EnricoBDev/chrome-remote-debug-docker)
 
+- Add to yout `pubspec.yaml`
+
+```yaml
+streamingcommunity_scraper:
+  git:
+    url: https://github.com/EnricoBDev/streamincommunity_scraper_dart.git
+```
+
 ## Usage
 
 ```dart

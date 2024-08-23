@@ -1,7 +1,7 @@
 name: streamingcommunity_scraper
 description: Dart package to scrape Italian streaming website streamingcommunity
 version: 0.0.1
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/EnricoBDev/streamincommunity_scraper_dart
 
 environment:
   sdk: ^3.4.4
