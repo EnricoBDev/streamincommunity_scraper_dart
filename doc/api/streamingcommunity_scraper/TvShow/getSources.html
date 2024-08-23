@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the getSources method from the TvShow class, for the Dart programming language.">
+  <title>getSources method - TvShow class - streamingcommunity_scraper library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">streamingcommunity_scraper</a></li>
+    <li><a href="../../streamingcommunity_scraper/streamingcommunity_scraper-library.html">streamingcommunity_scraper.dart</a></li>
+    <li><a href="../../streamingcommunity_scraper/TvShow-class.html">TvShow</a></li>
+    <li class="self-crumb">getSources method</li>
+  </ol>
+  <div class="self-name">getSources</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="streamingcommunity_scraper&#47;TvShow-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">getSources</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../streamingcommunity_scraper/Source-class.html">Source</a></span>&gt;</span></span>&gt;</span></span>
+<span class="name ">getSources</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="getSources-param-seasonId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">seasonId</span>, </span></li>
+<li><span class="parameter" id="getSources-param-episode"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">episode</span></span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Gets the sources that serve the episode of this tv show, takes:</p>
+<ul>
+<li><code>seasonId</code> the season number</li>
+<li><code>episode</code> the episode number
+If <code>seasonId</code> or <code>episode</code> are out of range, exceptions are thrown</li>
+</ul>
+<p>Example:</p>
+<pre class="language-dart"><code class="language-dart">TvShow show = TvShow(
+       url: "$BASE_URL/titles/7666-ncis-unita-anticrimine",
+       name: "NCIS - Unità anticrimine",
+       id: 7666,
+       slug: "ncis-unita-anticrimine",
+       seasonsCount: 20);
+   List&lt;Source&gt; sources = await show.getSources(13, 24);
+</code></pre>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;List&lt;Source&gt;&gt; getSources(int seasonId, int episode) async {
+  Map mediaDetails = await _getMediaDetails(_getSeasonTabUri(seasonId));
+
+  List episodes = _getEpisodes(mediaDetails);
+  int maxEpisode = episodes.length;
+  if (episode &gt; maxEpisode) {
+    throw EpisodeNotExistentException(
+        cause: &quot;The episode with number $episode is not in this season&quot;);
+  }
+
+  int episodeId = _getEpisodeId(episodes, episode);
+  String iframeUrl = _buildIframeUrl(episodeId);
+
+  Browser? browser = await BrowserConnection.getBrowser(SERVER_URL);
+  Page page = await browser!.newPage();
+
+  await page.goto(iframeUrl, wait: Until.networkIdle, timeout: Duration.zero);
+
+  ElementHandle iframe =
+      await page.$(&quot;html&quot;); &#47;&#47; takes the whole html page of the &#47;iframe url
+  Frame? contentFrame = await iframe.contentFrame;
+  Frame childFrame = contentFrame!.childFrames[0];
+
+  JsHandle jsStreams = await childFrame.waitForFunction(
+      &quot;() =&gt; window.streams&quot;,
+      timeout: Duration.zero,
+      polling: Polling.interval(Duration(milliseconds: 100)));
+  List streams = await jsStreams.jsonValue;
+
+  List&lt;Source&gt; sources = [];
+  for (Map stream in streams) {
+    String name = stream[&quot;name&quot;];
+    Uri url = Uri.parse(stream[&quot;url&quot;]);
+    Source source = Source(name: name, url: url);
+    sources.add(source);
+  }
+  BrowserConnection.disconnect();
+  return sources;
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">streamingcommunity_scraper</a></li>
+    <li><a href="../../streamingcommunity_scraper/streamingcommunity_scraper-library.html">streamingcommunity_scraper</a></li>
+    <li><a href="../../streamingcommunity_scraper/TvShow-class.html">TvShow</a></li>
+    <li class="self-crumb">getSources method</li>
+</ol>
+
+
+    <h5>TvShow class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    streamingcommunity_scraper
+      0.0.1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,3 @@
+const String BASE_URL = "https://streamingcommunity.buzz";
+const String API_URL = "$BASE_URL/api";
+const String SERVER_URL = "http://localhost:9222";
