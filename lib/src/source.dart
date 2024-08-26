@@ -3,8 +3,9 @@ import 'package:http/http.dart' as http;
 class Source {
   final String? name;
   final Uri url;
+  final String fileName;
 
-  const Source({this.name, required this.url});
+  const Source({this.name, required this.url, required this.fileName});
 
   // Future<bool> isActive() async {
   //   try {

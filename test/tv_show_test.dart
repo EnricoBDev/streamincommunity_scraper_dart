@@ -14,6 +14,7 @@ void main() {
           name: "NCIS - Unità anticrimine",
           id: 7666,
           slug: "ncis-unita-anticrimine",
+          imageUrl: "$CDN_IMAGES/0f42f7fa-4374-433f-b96d-3ccaebb06044.webp",
           seasonsCount: 20);
       List<Source> sources = await show.getSources(13, 24);
       String firstUrl = sources.first.url.toString();
@@ -27,7 +28,8 @@ void main() {
           name: "La regina degli scacchi",
           id: 2296,
           slug: "la-regina-degli-scacchi",
-          seasonsCount: 1);
+          seasonsCount: 1,
+          imageUrl: "$CDN_IMAGES/59f8f441-34bb-4b48-9752-ccf35743937b.webp");
       expectLater(
           show.getSources(2, 1), throwsA(isA<SeasonNotExistentException>()));
     });
@@ -38,6 +40,7 @@ void main() {
           name: "La regina degli scacchi",
           id: 2296,
           slug: "la-regina-degli-scacchi",
+          imageUrl: "$CDN_IMAGES/59f8f441-34bb-4b48-9752-ccf35743937b.webp",
           seasonsCount: 1);
       expectLater(
           show.getSources(1, 20), throwsA(isA<EpisodeNotExistentException>()));

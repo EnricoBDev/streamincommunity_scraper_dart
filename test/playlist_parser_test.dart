@@ -11,8 +11,9 @@ void main() {
   group("PlaylistParser tests", () {
     test("Test to check the normal behaviour of getMediaStreams() method",
         () async {
-      Source testSource =
-          Source(url: Uri.parse(r"https://vixcloud.co/playlist/196748?ub=1"));
+      Source testSource = Source(
+          url: Uri.parse(r"https://vixcloud.co/playlist/196748?ub=1"),
+          fileName: "Prova");
 
       Map<String, List<MediaStream>> mediaStreams = await PlaylistParser()
           .setPlaylistSource(testSource)
@@ -62,8 +63,9 @@ void main() {
     test(
         "Test to check correct functionality when resolution is expressed in bitrate",
         () async {
-      Source testSource =
-          Source(url: Uri.parse(r"https://vixcloud.co/playlist/45017?ab=1"));
+      Source testSource = Source(
+          url: Uri.parse(r"https://vixcloud.co/playlist/45017?ab=1"),
+          fileName: "Prova");
 
       Map<String, List<MediaStream>> mediaStreams = await PlaylistParser()
           .setPlaylistSource(testSource)

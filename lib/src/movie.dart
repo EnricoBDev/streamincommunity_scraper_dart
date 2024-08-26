@@ -11,7 +11,8 @@ class Movie extends Watchable {
       {required super.url,
       required super.name,
       required super.id,
-      required super.slug});
+      required super.slug,
+      required super.imageUrl});
 
   String get _iframeUrl => "$BASE_URL/iframe/$id";
 
@@ -48,7 +49,7 @@ class Movie extends Watchable {
     for (Map stream in streams) {
       String name = stream["name"];
       Uri url = Uri.parse(stream["url"]);
-      Source source = Source(name: name, url: url);
+      Source source = Source(name: name, url: url, fileName: this.name);
       sources.add(source);
     }
     BrowserConnection.disconnect();

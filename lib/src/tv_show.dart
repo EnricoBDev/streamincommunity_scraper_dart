@@ -18,6 +18,7 @@ class TvShow extends Watchable {
       required super.name,
       required super.id,
       required super.slug,
+      required super.imageUrl,
       required this.seasonsCount});
 
   Uri _getSeasonTabUri(int seasonId) {
@@ -77,7 +78,7 @@ class TvShow extends Watchable {
     for (Map stream in streams) {
       String name = stream["name"];
       Uri url = Uri.parse(stream["url"]);
-      Source source = Source(name: name, url: url);
+      Source source = Source(name: name, url: url, fileName: this.name);
       sources.add(source);
     }
     BrowserConnection.disconnect();

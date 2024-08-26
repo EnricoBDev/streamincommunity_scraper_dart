@@ -36,16 +36,23 @@ class WatchableSearcher {
     String type = result["type"];
     String name = result["name"];
     String slug = result["slug"];
+    String imageUrl = "$CDN_IMAGES/${result['images'][0]['filename']}";
     int id = result["id"];
     String url = "$BASE_URL/titles/$id-$slug";
 
     if (type == "tv") {
       int seasonsCount = result["seasons_count"];
       TvShow tvShow = TvShow(
-          url: url, name: name, id: id, slug: slug, seasonsCount: seasonsCount);
+          url: url,
+          name: name,
+          id: id,
+          slug: slug,
+          seasonsCount: seasonsCount,
+          imageUrl: imageUrl);
       return tvShow;
     }
-    Movie movie = Movie(url: url, name: name, id: id, slug: slug);
+    Movie movie =
+        Movie(url: url, name: name, id: id, slug: slug, imageUrl: imageUrl);
     return movie;
   }
 }
