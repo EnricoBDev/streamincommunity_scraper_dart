@@ -13,6 +13,7 @@ import 'watchable.dart';
 class TvShow extends Watchable {
   final int seasonsCount;
 
+  //TODO: create named constructor that also gets other media details like a description
   const TvShow(
       {required super.url,
       required super.name,
